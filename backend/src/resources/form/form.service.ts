@@ -22,6 +22,18 @@ export class FormService {
       include: { variables: true },
     })
   }
+
+  findAll() {
+    return this.prisma.form.findMany()
+  }
+  
+  findOne(id: string) {
+    return this.prisma.form.findUnique({
+      where: { id },
+      include: { variables: true },
+    })
+  }
+  
 }
 
 

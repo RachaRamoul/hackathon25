@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import providerRoutes from './providerRoutes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,7 +19,8 @@ const router = createRouter({
       path: '/form-builder',
       name: 'FormBuilder',
       component: () => import('@/views/Providers/FormBuilder.vue'),
-    }
+    },
+    ...providerRoutes
   
   ],
 })
