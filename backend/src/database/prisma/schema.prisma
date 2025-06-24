@@ -13,3 +13,25 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Form {
+  id        String     @id @default(uuid())
+  title     String
+  createdAt DateTime   @default(now())
+
+  variables Variable[] // Relation vers Variable
+}
+
+model Variable {
+  id        String   @id @default(uuid())
+  formId    String
+  label     String
+  type      String
+  required  Boolean
+
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@index([formId])
+}
+
+

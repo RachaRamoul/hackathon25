@@ -6,13 +6,13 @@
       </h1>
 
       <input
-        v-model="formTitle"
+        v-model="store.formTitle"
         placeholder="Titre du formulaire"
         class="border border-purple-300 rounded px-4 py-3 mb-6 w-full focus:outline-none focus:ring-2 focus:ring-purple-400"
       />
 
       <div
-        v-for="(field, index) in fields"
+        v-for="(field, index) in store.fields"
         :key="index"
         class="flex flex-col md:flex-row gap-4 mb-4"
       >
@@ -40,7 +40,7 @@
         </label>
 
         <button
-          @click="removeField(index)"
+          @click="store.removeField(index)"
           class="text-red-600 hover:text-red-800 font-medium"
         >
           ❌ Supprimer
@@ -49,14 +49,14 @@
 
       <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-end">
         <button
-          @click="addField"
+          @click="store.addField"
           class="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-3 rounded shadow"
         >
           ➕ Ajouter un champ
         </button>
 
         <button
-          @click="saveForm"
+          @click="store.saveForm"
           class="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded shadow"
         >
           💾 Enregistrer
@@ -67,30 +67,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import axios from 'axios'
+import { useFormStore } from '@/stores/form'
 
-const formTitle = ref('')
-const fields = ref([{ label: '', type: 'TEXT', required: false }])
-
-const addField = () => {
-  fields.value.push({ label: '', type: 'TEXT', required: false })
-}
-
-const removeField = (index: number) => {
-  fields.value.splice(index, 1)
-}
-
-const saveForm = async () => {
-  try {
-    await axios.post('/api/forms', {
-      title: formTitle.value,
-      fields: fields.value
-    })
-    alert('Formulaire enregistré !')
-  } catch (e) {
-    console.error(e)
-    alert('Erreur lors de la sauvegarde')
-  }
-}
+const store = useFormStore()
 </script>
+
