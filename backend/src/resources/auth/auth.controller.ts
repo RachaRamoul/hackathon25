@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { CurrentServiceProvider } from 'src/common/decorators/current-service-provider.decorator';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { Public } from './decorators/public.decorator';
 import { RegisterDto } from './dto/register.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -29,7 +31,7 @@ export class AuthController {
   @Get('me')
   getAuthInfo(@CurrentServiceProvider() serviceProvider: JwtPayload) {
     return {
-      userId: serviceProvider.id,
+      id: serviceProvider.id,
       email: serviceProvider.email,
     };
   }

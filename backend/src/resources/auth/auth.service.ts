@@ -19,7 +19,7 @@ export class AuthService {
 
   async login(serviceProvider: ServiceProviderEntity) {
     const payload = {
-      userId: serviceProvider.id,
+      id: serviceProvider.id,
       email: serviceProvider.email,
     };
     return {
@@ -27,9 +27,11 @@ export class AuthService {
     };
   }
 
-  async register(createUserDto: RegisterDto): Promise<ServiceProviderEntity> {
+  async register(
+    createServiceProviderDto: RegisterDto,
+  ): Promise<ServiceProviderEntity> {
     const existingUser = await this.prisma.serviceProvider.findUnique({
-      where: { email: createUserDto.email },
+      where: { email: createServiceProviderDto.email },
     });
 
     if (existingUser) {
@@ -37,11 +39,14 @@ export class AuthService {
         'Un utilisateur avec cet e-mail existe déjà.',
       );
     }
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      createServiceProviderDto.password,
+      10,
+    );
 
     const serviceProvider = await this.prisma.serviceProvider.create({
       data: {
-        ...createUserDto,
+        ...createServiceProviderDto,
         password: hashedPassword,
       },
     });
