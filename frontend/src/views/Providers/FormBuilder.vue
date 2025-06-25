@@ -1,31 +1,26 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center px-4 py-10">
-    <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-10 border border-purple-200">
-      <h1 class="text-3xl font-extrabold mb-10 text-purple-700 text-center flex items-center justify-center gap-2">
-        🎨 <span>Créer un formulaire dynamique</span>
-      </h1>
+  <div class="form-wrapper">
+    <div class="form-container">
+      <h1 class="form-title">🎨 Créer un service</h1>
 
       <input
         v-model="store.formTitle"
         placeholder="Titre du formulaire"
-        class="border border-purple-300 rounded px-4 py-3 mb-6 w-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+        class="form-input"
       />
 
       <div
         v-for="(field, index) in store.fields"
         :key="index"
-        class="flex flex-col md:flex-row gap-4 mb-4"
+        class="form-field-row"
       >
         <input
           v-model="field.label"
           placeholder="Nom du champ"
-          class="border border-purple-300 rounded px-4 py-3 flex-1 focus:outline-none focus:ring-2 focus:ring-purple-300"
+          class="form-input"
         />
 
-        <select
-          v-model="field.type"
-          class="border border-purple-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
-        >
+        <select v-model="field.type" class="form-select">
           <option value="TEXT">Texte</option>
           <option value="BOOLEAN">Boolean</option>
           <option value="FILE">Fichier</option>
@@ -34,31 +29,22 @@
           <option value="NUMBER">Nombre</option>
         </select>
 
-        <label class="flex items-center space-x-2">
+        <label class="form-checkbox">
           <input type="checkbox" v-model="field.required" />
-          <span class="text-gray-700">Requis</span>
+          Requis
         </label>
 
-        <button
-          @click="store.removeField(index)"
-          class="text-red-600 hover:text-red-800 font-medium"
-        >
+        <button @click="store.removeField(index)" class="btn-remove">
           ❌ Supprimer
         </button>
       </div>
 
-      <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-end">
-        <button
-          @click="store.addField"
-          class="bg-purple-500 hover:bg-purple-600 text-white font-medium px-6 py-3 rounded shadow"
-        >
+      <div class="form-actions">
+        <button @click="store.addField" class="btn-add">
           ➕ Ajouter un champ
         </button>
 
-        <button
-          @click="store.saveForm"
-          class="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded shadow"
-        >
+        <button @click="store.saveForm" class="btn-save">
           💾 Enregistrer
         </button>
       </div>
@@ -72,3 +58,102 @@ import { useFormStore } from '@/stores/form'
 const store = useFormStore()
 </script>
 
+<style scoped>
+.form-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #f3e8ff, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.form-container {
+  max-width: 800px;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #c084fc;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(128, 90, 213, 0.2);
+}
+
+.form-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #7e22ce;
+  margin-bottom: 30px;
+}
+
+.form-input,
+.form-select {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #c084fc;
+  width: 100%;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.form-field-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.btn-remove {
+  background: none;
+  color: #dc2626;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.btn-remove:hover {
+  color: #b91c1c;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.btn-add,
+.btn-save {
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+}
+
+.btn-add {
+  background-color: #8b5cf6;
+}
+
+.btn-add:hover {
+  background-color: #7c3aed;
+}
+
+.btn-save {
+  background-color: #10b981;
+}
+
+.btn-save:hover {
+  background-color: #059669;
+}
+</style>
