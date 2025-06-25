@@ -1,22 +1,20 @@
 <template>
-    <div class="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center px-4 py-10">
-      <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-10 border border-purple-200">
-        <h1 class="text-3xl font-extrabold mb-10 text-purple-700 text-center">
-          {{ form?.title }}
-        </h1>
+    <div class="form-wrapper">
+      <div class="form-container">
+        <h1 class="form-title">{{ form?.title }}</h1>
   
         <form class="space-y-6">
           <div
             v-for="field in form?.variables"
             :key="field.id"
-            class="flex flex-col gap-2"
+            class="form-field-row"
           >
             <label class="font-semibold text-gray-700">{{ field.label }}</label>
   
             <input
               v-if="field.type === 'TEXT'"
               type="text"
-              class="border border-purple-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              class="form-input"
               :required="field.required"
               v-model="responses[field.id]"
             />
@@ -24,7 +22,7 @@
             <input
               v-else-if="field.type === 'BOOLEAN'"
               type="checkbox"
-              class="h-5 w-5 text-purple-600 focus:ring-purple-400"
+              class="checkbox-input"
               :required="field.required"
               v-model="responses[field.id]"
             />
@@ -32,7 +30,7 @@
             <input
               v-else-if="field.type === 'DATE'"
               type="date"
-              class="border border-purple-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              class="form-input"
               :required="field.required"
               v-model="responses[field.id]"
             />
@@ -40,7 +38,7 @@
             <input
               v-else-if="field.type === 'NUMBER'"
               type="number"
-              class="border border-purple-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              class="form-input"
               :required="field.required"
               v-model="responses[field.id]"
             />
@@ -48,7 +46,7 @@
             <input
               v-else-if="field.type === 'FILE' || field.type === 'PDF'"
               type="file"
-              class="border border-purple-300 rounded px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              class="form-input"
               :required="field.required"
               @change="handleFileUpload($event, field.id)"
             />
@@ -75,7 +73,11 @@
   
     data.variables.forEach((field: any) => {
       responses.value[field.id] =
-        field.type === 'BOOLEAN' ? false : field.type === 'FILE' || field.type === 'PDF' ? null : ''
+        field.type === 'BOOLEAN'
+          ? false
+          : field.type === 'FILE' || field.type === 'PDF'
+          ? null
+          : ''
     })
   })
   
@@ -86,4 +88,53 @@
     }
   }
   </script>
+  
+  <style scoped>
+  .form-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #f3e8ff, #ffffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #c084fc;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(128, 90, 213, 0.2);
+  }
+  
+  .form-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #7e22ce;
+    margin-bottom: 30px;
+  }
+  
+  .form-input {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #c084fc;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .checkbox-input {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .form-field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  </style>
   

@@ -1,17 +1,19 @@
 <template>
-    <div class="p-8">
-      <h1 class="text-2xl font-bold mb-6">📄 Liste des formulaires</h1>
+    <div class="form-wrapper">
+      <div class="form-container">
+        <h1 class="form-title">📄 Liste des formulaires</h1>
   
-      <ul class="space-y-3">
-        <li
-          v-for="form in forms"
-          :key="form.id"
-          @click="goToForm(form.id)"
-          class="cursor-pointer p-4 border rounded hover:bg-purple-100"
-        >
-          {{ form.title }}
-        </li>
-      </ul>
+        <ul class="form-list">
+          <li
+            v-for="form in forms"
+            :key="form.id"
+            @click="goToForm(form.id)"
+            class="form-list-item"
+          >
+            {{ form.title }}
+          </li>
+        </ul>
+      </div>
     </div>
   </template>
   
@@ -38,4 +40,51 @@
   }
   </script>
   
+  <style scoped>
+  .form-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #f3e8ff, #ffffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #c084fc;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(128, 90, 213, 0.2);
+  }
+  
+  .form-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #7e22ce;
+    margin-bottom: 30px;
+  }
+  
+  .form-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .form-list-item {
+    padding: 16px;
+    border: 1px solid #c084fc;
+    border-radius: 10px;
+    background-color: #faf5ff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .form-list-item:hover {
+    background-color: #ede9fe;
+  }
+  </style>
   
