@@ -13,14 +13,17 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@tailwindcss/typography": "^0.5.16",
+    "@mdi/font": "^7.4.47",
+    "@tailwindcss/vite": "^4.1.10",
     "axios": "^1.10.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "vuetify": "^3.8.10"
+    "vuetify": "^3.8.10",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "@tsconfig/node22": "^22.0.1",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-vue": "^5.2.3",
