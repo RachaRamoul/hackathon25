@@ -35,3 +35,10 @@ model Variable {
 }
 
 
+model ServiceProvider {
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String @unique
+  password  String
+}
