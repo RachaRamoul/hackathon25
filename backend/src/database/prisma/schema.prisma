@@ -15,12 +15,15 @@ datasource db {
 }
 
 model Form {
-  id        String     @id @default(uuid())
-  title     String
-  createdAt DateTime   @default(now())
+  id          String     @id @default(uuid())
+  title       String
+  description String     @default("Aucune description") 
+  type        String     @default("human")             
+  createdAt   DateTime   @default(now())
 
-  variables Variable[] // Relation vers Variable
+  variables   Variable[]
 }
+
 
 model Variable {
   id        String   @id @default(uuid())

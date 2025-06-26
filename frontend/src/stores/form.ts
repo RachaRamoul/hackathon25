@@ -4,9 +4,11 @@ import axios from 'axios'
 export const useFormStore = defineStore('form', {
   state: () => ({
     formTitle: '',
+    formDescription: '', 
+    formType: '',         
     fields: [{ label: '', type: 'TEXT', required: false }],
-    forms: [], 
-    currentForm: null, 
+    forms: [],
+    currentForm: null,
   }),
 
   actions: {
@@ -19,9 +21,27 @@ export const useFormStore = defineStore('form', {
     },
 
     async saveForm() {
+      if (!this.formTitle || !this.formDescription || !this.formType) {
+        alert('Veuillez remplir tous les champs obligatoires.')
+        return
+      }
+    
+      if (this.fields.length === 0) {
+        alert('Ajoutez au moins un champ.')
+        return
+      }
+    
+      const invalidField = this.fields.find(f => !f.label || !f.type)
+      if (invalidField) {
+        alert('Tous les champs doivent avoir un nom et un type.')
+        return
+      }
+    
       try {
         await axios.post('http://localhost:8000/forms', {
           title: this.formTitle,
+          description: this.formDescription,
+          type: this.formType,
           variables: this.fields,
         })
         alert('✅ Formulaire enregistré !')
@@ -29,7 +49,7 @@ export const useFormStore = defineStore('form', {
         console.error(error)
         alert('Erreur lors de la sauvegarde')
       }
-    },
+    },    
 
     async fetchForms() {
       try {

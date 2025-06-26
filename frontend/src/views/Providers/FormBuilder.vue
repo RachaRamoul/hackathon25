@@ -1,159 +1,102 @@
 <template>
-  <div class="form-wrapper">
-    <div class="form-container">
-      <h1 class="form-title">🎨 Créer un service</h1>
+  <div class="min-h-screen bg-gray-50 py-10 px-6">
+    <v-container>
+      <v-row justify="center">
+        <v-col cols="12" md="8">
+          <v-card class="rounded-xl shadow-md px-6 py-8">
+            <h1 class="text-2xl font-bold mb-6 text-purple-800 text-center">🎨 Créer un service</h1>
 
-      <input
-        v-model="store.formTitle"
-        placeholder="Titre du formulaire"
-        class="form-input"
-      />
+            <v-text-field
+              v-model="store.formTitle"
+              label="Titre du formulaire"
+              outlined
+              dense
+              class="mb-4"
+              :rules="[v => !!v || 'Le titre est requis']"
+              required
+            />
 
-      <div
-        v-for="(field, index) in store.fields"
-        :key="index"
-        class="form-field-row"
-      >
-        <input
-          v-model="field.label"
-          placeholder="Nom du champ"
-          class="form-input"
-        />
+            <v-textarea
+              v-model="store.formDescription"
+              label="Description du formulaire"
+              rows="3"
+              outlined
+              class="mb-4"
+              :rules="[v => !!v || 'La description est requise']"
+              required
+            />
 
-        <select v-model="field.type" class="form-select">
-          <option value="TEXT">Texte</option>
-          <option value="BOOLEAN">Boolean</option>
-          <option value="FILE">Fichier</option>
-          <option value="PDF">PDF</option>
-          <option value="DATE">Date</option>
-          <option value="NUMBER">Nombre</option>
-        </select>
+            <v-select
+              v-model="store.formType"
+              :items="['ia', 'human']"
+              label="Type de service"
+              outlined
+              dense
+              class="mb-6"
+              :rules="[v => !!v || 'Le type est requis']"
+              required
+            />
 
-        <label class="form-checkbox">
-          <input type="checkbox" v-model="field.required" />
-          Requis
-        </label>
+            <div v-for="(field, index) in store.fields" :key="index" class="mb-4">
+              <v-row dense align="center">
+                <v-col cols="5">
+                  <v-text-field
+                    v-model="field.label"
+                    label="Nom du champ"
+                    outlined
+                    dense
+                    :rules="[v => !!v || 'Champ requis']"
+                    required
+                  />
+                </v-col>
 
-        <button @click="store.removeField(index)" class="btn-remove">
-          ❌ Supprimer
-        </button>
-      </div>
+                <v-col cols="3">
+                  <v-select
+                  v-model="field.type"
+                  :items="['TEXT', 'BOOLEAN', 'FILE', 'PDF', 'DATE', 'NUMBER']"
+                  label="Type"
+                  outlined
+                  dense
+                  :rules="[v => !!v || 'Type requis']"
+                  required
+                  />
+                </v-col>
 
-      <div class="form-actions">
-        <button @click="store.addField" class="btn-add">
-          ➕ Ajouter un champ
-        </button>
+                <v-col cols="2">
+                  <v-checkbox
+                    v-model="field.required"
+                    label="Requis"
+                    hide-details
+                  />
+                </v-col>
 
-        <button @click="store.saveForm" class="btn-save">
-          💾 Enregistrer
-        </button>
-      </div>
-    </div>
+                <v-col cols="2" class="text-right">
+                  <v-btn icon color="red" @click="store.removeField(index)">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </div>
+
+            <v-row justify="space-between" class="mt-6">
+              <v-btn color="primary" variant="flat" @click="store.addField">
+                ➕ Ajouter un champ
+              </v-btn>
+
+              <v-btn color="success" variant="flat" @click="store.saveForm">
+                💾 Enregistrer
+              </v-btn>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useFormStore } from '@/stores/form'
+import { VBtn, VCard, VCheckbox, VCol, VContainer, VIcon, VRow, VSelect, VTextField, VTextarea } from 'vuetify/components'
 
 const store = useFormStore()
 </script>
-
-<style scoped>
-.form-wrapper {
-  min-height: 100vh;
-  background: linear-gradient(to bottom right, #f3e8ff, #ffffff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
-}
-
-.form-container {
-  max-width: 800px;
-  width: 100%;
-  background-color: white;
-  border: 1px solid #c084fc;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 10px 30px rgba(128, 90, 213, 0.2);
-}
-
-.form-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  color: #7e22ce;
-  margin-bottom: 30px;
-}
-
-.form-input,
-.form-select {
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #c084fc;
-  width: 100%;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.form-field-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr auto auto;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.form-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-}
-
-.btn-remove {
-  background: none;
-  color: #dc2626;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 6px;
-}
-
-.btn-remove:hover {
-  color: #b91c1c;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 30px;
-}
-
-.btn-add,
-.btn-save {
-  padding: 10px 20px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: white;
-}
-
-.btn-add {
-  background-color: #8b5cf6;
-}
-
-.btn-add:hover {
-  background-color: #7c3aed;
-}
-
-.btn-save {
-  background-color: #10b981;
-}
-
-.btn-save:hover {
-  background-color: #059669;
-}
-</style>

@@ -5,12 +5,14 @@ import { PrismaService } from '../../database/prisma/prisma.service'
 export class FormService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createForm(data: { title: string; variables: any[] }) {
-    const { title, variables } = data
-
+  async createForm(data: { title: string; description: string; type: string; variables: any[] }) {
+    
+    const { title, description, type, variables } = data
     return this.prisma.form.create({
       data: {
         title,
+        description,
+        type,       
         variables: {
           create: variables.map((v) => ({
             label: v.label,
