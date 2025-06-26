@@ -9,7 +9,10 @@
           :key="field.id"
           class="space-y-2"
         >
-          <label class="block font-medium text-gray-700">{{ field.label }}</label>
+        <label class="block font-medium text-gray-700">
+          {{ field.label }}
+          <span v-if="field.required" class="text-red-500">*</span>
+        </label>
 
           <input
             v-if="field.type === 'TEXT'"
@@ -54,6 +57,19 @@
           <p v-else class="text-red-600"> Type non supporté : {{ field.type }}</p>
         </div>
       </form>
+      <div class="mt-6">
+      <button
+        @click="sendToIa"
+        class="bg-secondary px-4 py-2"
+      >
+        Envoyer à l'IA
+      </button>
+    </div>
+
+    <div v-if="iaResponse" class="mt-6 p-4 border border-green-400 bg-green-50 rounded">
+      <h2 class="text-lg font-semibold text-green-700 mb-2">Réponse de l'IA :</h2>
+      <p class="text-gray-800 whitespace-pre-line">{{ iaResponse }}</p>
+    </div>
     </div>
   </div>
 </template>
@@ -84,6 +100,43 @@ onMounted(async () => {
     console.error('Erreur lors du chargement du service :', error)
   }
 })
+
+const iaResponse = ref<string | null>(null)
+
+const sendToIa = async () => {
+  if (!service.value?.id) return;
+
+  const missing = service.value.variables.find(field => {
+    if (!field.required) return false;
+
+    const value = responses.value[field.id];
+
+    return (
+      value === null ||
+      value === undefined ||
+      (typeof value === 'string' && value.trim() === '') ||
+      (field.type === 'FILE' && !value)
+    );
+  });
+
+  if (missing) {
+    alert(`Le champ "${missing.label}" est requis.`);
+    return;
+  }
+
+  try {
+    const { data } = await apiClient.post('/ia/execute', {
+      serviceId: service.value.id,
+      variables: responses.value,
+    });
+
+    iaResponse.value = data.response;
+  } catch (err) {
+    console.error('Erreur IA :', err);
+    iaResponse.value = "Une erreur s'est produite lors de l'appel à l'IA.";
+  }
+};
+
 
 const handleFileUpload = (event: Event, fieldId: string) => {
   const target = event.target as HTMLInputElement

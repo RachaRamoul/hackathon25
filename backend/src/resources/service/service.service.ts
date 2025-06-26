@@ -1,22 +1,34 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma/prisma.service';
-import { CreateServiceDto } from './dto/create-service.dto'; // ✅ bon import
+import { CreateServiceDto } from './dto/create-service.dto';
+import { encrypt } from 'src/common/utils/crypto';
 
 @Injectable()
 export class ServiceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createService(data: CreateServiceDto) {
-    const { name, description, type, price, serviceProviderId, variables } = data;
-
+    const {
+      name,
+      description,
+      type,
+      price,
+      serviceProviderId,
+      variables,
+      defaultPrompt,
+      model,
+      systemPrompt,
+      apiKey,
+    } = data;
     const provider = await this.prisma.serviceProvider.findUnique({
       where: { id: serviceProviderId },
     });
+
     if (!provider) {
-      throw new NotFoundException("Fournisseur de service introuvable.");
+      throw new NotFoundException('Fournisseur de service introuvable.');
     }
 
-    return this.prisma.service.create({
+    const service = await this.prisma.service.create({
       data: {
         name,
         description,
@@ -36,6 +48,18 @@ export class ServiceService {
         serviceProvider: true,
       },
     });
+
+    await this.prisma.aiConfiguration.create({
+      data: {
+        model,
+        systemPrompt,
+        defaultPrompt,
+        encryptedApiKey: encrypt(apiKey),
+        serviceId: service.id,
+      },
+    });
+
+    return service;
   }
 
   findAll() {

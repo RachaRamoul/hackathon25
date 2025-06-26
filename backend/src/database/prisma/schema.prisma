@@ -8,38 +8,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AiConfiguration {
+  id              String @id @default(uuid())
+  model           String
+  systemPrompt    String
+  defaultPrompt   String
+  encryptedApiKey String
+
+  serviceId String  @unique
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
 model Service {
-  id               String           @id @default(uuid())
-  name             String
-  description      String           @default("Aucune description")
-  type             String           @default("human")
-  createdAt        DateTime         @default(now())
-  price     Float    @default(0.0)
+  id          String   @id @default(uuid())
+  name        String
+  description String   @default("Aucune description")
+  type        String   @default("human")
+  createdAt   DateTime @default(now())
+  price       Float    @default(0.0)
 
   serviceProviderId String
   serviceProvider   ServiceProvider @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade)
 
-  variables         Variable[]
+  variables       Variable[]
+  aiConfiguration AiConfiguration?
 }
 
 model Variable {
-  id        String   @id @default(uuid())
-  label     String
-  type      String
-  required  Boolean
+  id       String  @id @default(uuid())
+  label    String
+  type     String
+  required Boolean
 
   serviceId String
-  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   @@index([serviceId])
 }
 
 model ServiceProvider {
-  id        String    @id @default(uuid())
+  id        String @id @default(uuid())
   firstName String
   lastName  String
-  email     String    @unique
+  email     String @unique
   password  String
 
-  services  Service[]
+  services Service[]
 }

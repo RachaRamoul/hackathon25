@@ -1,24 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `formId` on the `Variable` table. All the data in the column will be lost.
-  - You are about to drop the `Form` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `serviceId` to the `Variable` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropForeignKey
-ALTER TABLE "Variable" DROP CONSTRAINT "Variable_formId_fkey";
-
--- DropIndex
-DROP INDEX "Variable_formId_idx";
-
--- AlterTable
-ALTER TABLE "Variable" DROP COLUMN "formId",
-ADD COLUMN     "serviceId" TEXT NOT NULL;
-
--- DropTable
-DROP TABLE "Form";
-
 -- CreateTable
 CREATE TABLE "Service" (
     "id" TEXT NOT NULL,
@@ -26,13 +5,39 @@ CREATE TABLE "Service" (
     "description" TEXT NOT NULL DEFAULT 'Aucune description',
     "type" TEXT NOT NULL DEFAULT 'human',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "price" DOUBLE PRECISION NOT NULL DEFAULT 0.0,
     "serviceProviderId" TEXT NOT NULL,
 
     CONSTRAINT "Service_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Variable" (
+    "id" TEXT NOT NULL,
+    "label" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "required" BOOLEAN NOT NULL,
+    "serviceId" TEXT NOT NULL,
+
+    CONSTRAINT "Variable_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ServiceProvider" (
+    "id" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+
+    CONSTRAINT "ServiceProvider_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "Variable_serviceId_idx" ON "Variable"("serviceId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ServiceProvider_email_key" ON "ServiceProvider"("email");
 
 -- AddForeignKey
 ALTER TABLE "Service" ADD CONSTRAINT "Service_serviceProviderId_fkey" FOREIGN KEY ("serviceProviderId") REFERENCES "ServiceProvider"("id") ON DELETE CASCADE ON UPDATE CASCADE;

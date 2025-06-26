@@ -46,6 +46,71 @@
           />
         </div>
 
+        <div v-if="store.formType === 'ia'" class="space-y-4 mb-6">
+          
+          <v-text-field
+            v-model="store.formApiKey"
+            label="Clé API OpenAI"
+            type="password"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+
+          <v-select
+            v-model="store.formModel"
+            :items="['gpt-3.5-turbo', 'gpt-4']"
+            label="Modèle OpenAI"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+
+          <v-textarea
+            v-model="store.formSystemPrompt"
+            label="Instructions pour l'IA (system prompt)"
+            rows="2"
+            auto-grow
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+
+          <v-textarea
+            v-model="store.formDefaultPrompt"
+            ref="defaultPromptRef"
+            label="Prompt par défaut (avec variables)"
+            hint="Utilisez des variables comme {client_name}, {job_title}... en cliquant dessus"
+            persistent-hint
+            rows="2"
+            auto-grow
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+          <div v-if="store.formType === 'ia' && store.fields.length" class="space-y-2">
+            <label class="text-sm text-gray-600 font-medium">Variables disponibles :</label>
+            <div v-if="availableVariables.length > 0"  class="flex flex-wrap gap-2">
+              <v-chip
+                v-for="(field, index) in availableVariables"
+                :key="index"
+                variant="outlined"
+                color="primary"
+                size="small"
+                class="cursor-pointer"
+                @click="insertVariable(field.label)"
+              >
+                {{ "{" + toVariableKey(field.label) + "}" }}
+              </v-chip>
+            </div>
+            
+            <div v-else class="text-sm text-gray-500 italic">
+              Aucune variable disponible. Ajoutez des champs dynamiques ci-dessous pour les utiliser dans le prompt.
+            </div>
+            
+          </div>
+        </div>
+
         <!-- Champs dynamiques -->
         <div class="space-y-4 mb-6">
           <div
@@ -92,10 +157,10 @@
 
         <!-- Actions -->
         <div class="flex justify-between mt-4">
-          <v-btn variant="text" size="small" color="primary" @click="store.addField">
+          <v-btn variant="plain" size="small" color="secondary" @click="store.addField">
             Ajouter un champ
           </v-btn>
-          <v-btn variant="flat" size="small" color="success" @click="store.saveService">
+          <v-btn variant="flat" size="small" color="secondary" @click="store.saveService">
             Enregistrer
           </v-btn>
         </div>
@@ -107,7 +172,7 @@
 
 
 <script setup lang="ts">
-import { watchEffect } from 'vue'
+import { computed, nextTick, ref, watchEffect } from 'vue'
 import { useAuthStore } from '../../stores/auth'
 import { useServiceStore } from '../../stores/service'
 import {
@@ -125,11 +190,46 @@ import {
 
 const authStore = useAuthStore()
 const store = useServiceStore()
+const defaultPromptRef = ref<any>(null);
 
 watchEffect(() => {
   if (authStore.user?.id) {
     store.serviceProviderId = authStore.user.id
   }
 })
+
+const availableVariables = computed(() =>
+  store.fields.filter(f => f.label && f.label.trim().length > 0)
+)
+
+function toVariableKey(label: string): string {
+  return label
+    .normalize("NFD")             
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "_")        
+    .replace(/[^a-z0-9_]/g, "");     
+}
+
+function insertVariable(label: string) {
+  const variable = `{${toVariableKey(label)}}`;
+
+  nextTick(() => {
+    const textarea = defaultPromptRef.value?.$el?.querySelector('textarea');
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = store.formDefaultPrompt;
+
+    store.formDefaultPrompt = text.slice(0, start) + variable + text.slice(end);
+
+    nextTick(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + variable.length, start + variable.length);
+    });
+  });
+}
 </script>
 

@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (authAlreadyChecked.value) return;
     authAlreadyChecked.value = true;
     try {
-      const response = await apiClient.get('/auth/me');
+      const response = await apiClient.get('/auth/me', {meta: { isSilentAuthCheck: true }});
       user.value = ApiCurrentUserSchema.parse(response.data);
       isAuthenticated.value = true;
     } catch (err: any) {

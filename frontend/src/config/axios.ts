@@ -20,11 +20,14 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {  
-      const status = error.response?.status
+      const { config, response } = error;
+      const status = response?.status;
       const authStore = useAuthStore()
       const token = localStorage.getItem('token')
 
-      if (status === 401 && (!token || !authStore.isAuthenticated)) {
+      const isSilentAuthCheck = config?.meta?.isSilentAuthCheck === true;
+
+      if (status === 401 && !isSilentAuthCheck && (!token || !authStore.isAuthenticated)) {
         await authStore.logout();
       }
       return Promise.reject(error);
