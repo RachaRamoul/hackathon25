@@ -1,60 +1,73 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-10 px-6">
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">Mes services</h1>
-      <v-btn color="primary" class="text-white text-sm font-medium" @click="goToCreateService">
+    <!-- Header -->
+    <div class="mb-8">
+      <v-btn
+        color="secondary"
+        class="mb-6 text-white text-sm font-medium shadow-sm"
+        @click="goToCreateService"
+        variant="flat"
+      >
         Nouveau service
       </v-btn>
+
+      <!-- Titre en dessous -->
+      <h1 class="text-3xl font-semibold text-gray-800 tracking-tight">
+        Mes services
+      </h1>
     </div>
 
-    <v-container fluid>
-      <v-row dense>
-        <v-col
-          v-for="service in services"
-          :key="service.id"
-          cols="12"
-          md="6"
-          lg="4"
-        >
-          <v-card class="rounded-xl shadow-md hover:shadow-lg transition-all h-full">
-            <v-card-title class="text-lg font-semibold text-secondary">
-              <div class="flex justify-between items-center w-full">
-                <span>{{ service.name }}</span>
-                <span class="text-sm text-gray-600">{{ service.price }} €</span>
-                <v-tooltip text="Modifier le service">
-                  <template #activator="{ props }">
-                    <v-icon 
-                      v-bind="props"         
-                      icon="mdi-pencil"
-                      color="primary"
-                      size="24"
-                      class="cursor-pointer" 
-                      @click="editService(service.id)" />
-                  </template>
-                </v-tooltip>
-              </div>
-            </v-card-title>
 
-            <v-card-text class="text-sm text-gray-700">
-              <p class="mb-2">{{ service.description }}</p>
-              <p class="text-xs text-gray-400">Créé le {{ formatDate(service.createdAt) }}</p>
-            </v-card-text>
 
-            <v-card-actions class="px-4 pb-4">
-              <v-chip
-                :color="service.type === 'ia' ? 'blue' : 'green'"
-                variant="flat"
-                class="text-white text-xs"
-              >
-                {{ service.type === 'ia' ? 'Service IA' : 'Service Humain' }}
-              </v-chip>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+
+
+    <!-- Cards Grid -->
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <v-card
+        v-for="service in services"
+        :key="service.id"
+        class="rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 h-full flex flex-col justify-between"
+      >
+        <!-- Title -->
+        <div class="flex items-center justify-between px-5 pt-5">
+          <h2 class="text-base font-semibold text-gray-800 truncate">
+            {{ service.name }}
+          </h2>
+          <v-tooltip text="Modifier le service">
+            <template #activator="{ props }">
+              <v-icon
+                v-bind="props"
+                icon="mdi-pencil"
+                color="secondary"
+                size="20"
+                class="cursor-pointer"
+                @click="editService(service.id)"
+              />
+            </template>
+          </v-tooltip>
+        </div>
+
+        <!-- Content -->
+        <v-card-text class="px-5 pb-2 pt-3 text-sm text-gray-600 flex-1">
+          <p class="line-clamp-3">{{ service.description }}</p>
+          <p class="text-xs text-gray-400 mt-3">Créé le {{ formatDate(service.createdAt) }}</p>
+        </v-card-text>
+
+        <!-- Footer -->
+        <div class="px-5 pb-4 pt-2">
+          <v-chip
+            :color="service.type === 'ia' ? 'indigo' : 'green'"
+            variant="flat"
+            class="text-white text-xs font-medium"
+          >
+            {{ service.type === 'ia' ? 'Service IA' : 'Service Humain' }}
+          </v-chip>
+        </div>
+      </v-card>
+    </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
@@ -69,7 +82,7 @@ const editService = (id: number) => {
 }
 
 const goToCreateService = () => {
-  router.push('/service-provider/services/create')
+  router.push('/service-provider/form-builder')
 }
 
 const formatDate = (dateString: string) => {

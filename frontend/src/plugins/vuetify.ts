@@ -9,8 +9,8 @@ const customLightTheme: ThemeDefinition = {
     background: '#FAFAFA',
     surface: '#FFFFFF',
     primary: '#000000',     
-    secondary: '#F48FB1',   
-    accent: '#FF7043',       
+    secondary: '#2e69c8',   
+    accent: '#FF7043',
     error: '#F44336',
     info: '#2196F3',
     success: '#4CAF50',
@@ -53,6 +53,7 @@ const customDarkTheme: ThemeDefinition = {
     'text-secondary-light': '#D9D9D9',
     'text-secondary-medium': '#757575',
     'secondary-light': '#7986CB',   
+    'app-bar': '#FAFAFA',
   },
   variables: {
     'sans': 'Roboto Condensed, Roboto, sans-serif',

@@ -1,109 +1,110 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-10 px-6">
-    <v-container>
-      <v-row justify="center">
-        <v-col cols="12" md="8">
-          <v-card class="rounded-xl shadow-md px-6 py-8">
-            <h1 class="text-2xl font-bold mb-6 text-purple-800 text-center"> Créer un service </h1>
+  <div class="min-h-screen bg-white flex justify-center items-start pt-10 px-4">
+    <div class="w-full max-w-3xl">
+      <div class="bg-white shadow rounded-xl p-6 border border-gray-200">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Créer un service</h1>
+        <div class="mb-4">
+          <v-text-field
+            v-model="store.formTitle"
+            label="Titre"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+        </div>
 
-            <v-text-field
-              v-model="store.formTitle"
-              label="Titre du formulaire"
-              outlined
-              dense
-              class="mb-4"
-              :rules="[v => !!v || 'Le titre est requis']"
-              required
-            />
+        <!-- Description -->
+        <div class="mb-4">
+          <v-textarea
+            v-model="store.formDescription"
+            label="Description"
+            variant="outlined"
+            rows="2"
+            density="compact"
+            auto-grow
+            hide-details="auto"
+          />
+        </div>
 
-            <v-textarea
-              v-model="store.formDescription"
-              label="Description du formulaire"
-              rows="3"
-              outlined
-              class="mb-4"
-              :rules="[v => !!v || 'La description est requise']"
-              required
-            />
+        <!-- Type & Prix -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <v-select
+            v-model="store.formType"
+            :items="['ia', 'human']"
+            label="Type"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+          <v-text-field
+            v-model="store.formPrice"
+            label="Prix (€)"
+            type="number"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+        </div>
 
-            <v-select
-              v-model="store.formType"
-              :items="['ia', 'human']"
-              label="Type de service"
-              outlined
-              dense
-              class="mb-6"
-              :rules="[v => !!v || 'Le type est requis']"
-              required
-            />
-
-            <v-text-field
-                  v-model="store.formPrice"
-                  label="Prix (€)"
-                  outlined
-                  dense
-                  class="mb-6"
-                  type="number"
-                  :rules="[v => v >= 0 || 'Le prix doit être positif']"
-                  required
-            />
-            
-            <div v-for="(field, index) in store.fields" :key="index" class="mb-4">
-              <v-row dense align="center">
-                <v-col cols="5">
-                  <v-text-field
-                    v-model="field.label"
-                    label="Nom du champ"
-                    outlined
-                    dense
-                    :rules="[v => !!v || 'Champ requis']"
-                    required
-                  />
-                </v-col>
-
-                <v-col cols="3">
-                  <v-select
+        <!-- Champs dynamiques -->
+        <div class="space-y-4 mb-6">
+          <div
+            v-for="(field, index) in store.fields"
+            :key="index"
+            class="border border-gray-100 rounded-md p-4"
+          >
+            <div class="grid grid-cols-12 gap-3 items-center">
+              <div class="col-span-5">
+                <v-text-field
+                  v-model="field.label"
+                  label="Nom"
+                  variant="outlined"
+                  density="compact"
+                  hide-details="auto"
+                />
+              </div>
+              <div class="col-span-4">
+                <v-select
                   v-model="field.type"
                   :items="['TEXT', 'BOOLEAN', 'FILE', 'PDF', 'DATE', 'NUMBER']"
                   label="Type"
-                  outlined
-                  dense
-                  :rules="[v => !!v || 'Type requis']"
-                  required
-                  />
-                </v-col>
-
-                <v-col cols="2">
-                  <v-checkbox
-                    v-model="field.required"
-                    label="Requis"
-                    hide-details
-                  />
-                </v-col>
-
-                <v-col cols="2" class="text-right">
-                  <v-btn icon color="red" @click="store.removeField(index)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </v-col>
-              </v-row>
+                  variant="outlined"
+                  density="compact"
+                  hide-details="auto"
+                />
+              </div>
+              <div class="col-span-2">
+                <v-checkbox
+                  v-model="field.required"
+                  label="Requis"
+                  density="compact"
+                  hide-details
+                />
+              </div>
+              <div class="col-span-1 text-right">
+                <v-btn icon variant="text" size="small" color="gray" @click="store.removeField(index)">
+                  <v-icon size="18">mdi-close</v-icon>
+                </v-btn>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <v-row justify="space-between" class="mt-6">
-              <v-btn color="primary" variant="flat" @click="store.addField">
-                ➕ Ajouter un champ
-              </v-btn>
-
-              <v-btn color="success" variant="flat" @click="store.saveService">
-                💾 Enregistrer
-              </v-btn>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+        <!-- Actions -->
+        <div class="flex justify-between mt-4">
+          <v-btn variant="text" size="small" color="primary" @click="store.addField">
+            Ajouter un champ
+          </v-btn>
+          <v-btn variant="flat" size="small" color="success" @click="store.saveService">
+            Enregistrer
+          </v-btn>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+
 
 <script setup lang="ts">
 import { watchEffect } from 'vue'

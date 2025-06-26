@@ -2,12 +2,13 @@
   <v-app-bar
     flat
     height="64"
-    class="border-b border-gray-100 bg-white px-8"
+    class="border-b border-black-100 px-8"
+    color="app-bar"
   >
-    <div class="w-full flex items-center justify-between">
+    <div class="w-full flex justify-between">
 
       <RouterLink to="/services-list" class="flex items-center">
-        <img src="@/assets/service.svg" alt="Logo" class="w-1/2 h-auto mx-auto" />
+        <img src="@/assets/logo2.png" alt="Logo" class="w-1/3 h-auto" />
       </RouterLink>
 
       <div class="flex items-center gap-6">
