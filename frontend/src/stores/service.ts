@@ -6,6 +6,7 @@ export const useServiceStore = defineStore('service', {
     formTitle: '',
     formDescription: '', 
     formType: '', 
+    formPrice: 0, 
     serviceProviderId: '',        
     fields: [{ label: '', type: 'TEXT', required: false }],
     forms: [],
@@ -22,6 +23,13 @@ export const useServiceStore = defineStore('service', {
     },
 
     async saveService() {
+      console.log({
+        title: this.formTitle,
+        description: this.formDescription,
+        type: this.formType,
+        serviceProviderId: this.serviceProviderId
+      })
+      
       if (!this.formTitle || !this.formDescription || !this.formType || !this.serviceProviderId) {
         alert('Veuillez remplir tous les champs obligatoires.')
         return

@@ -20,6 +20,7 @@
             <v-card-title class="text-lg font-semibold text-secondary">
               <div class="flex justify-between items-center w-full">
                 <span>{{ service.name }}</span>
+                <span class="text-sm text-gray-600">{{ service.price }} €</span>
                 <v-tooltip text="Modifier le service">
                   <template #activator="{ props }">
                     <v-icon 

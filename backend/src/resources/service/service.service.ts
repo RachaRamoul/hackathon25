@@ -7,7 +7,7 @@ export class ServiceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createService(data: CreateServiceDto) {
-    const { name, description, type, serviceProviderId, variables } = data;
+    const { name, description, type, price, serviceProviderId, variables } = data;
 
     const provider = await this.prisma.serviceProvider.findUnique({
       where: { id: serviceProviderId },
@@ -21,6 +21,7 @@ export class ServiceService {
         name,
         description,
         type,
+        price,
         serviceProviderId,
         variables: {
           create: variables.map((v) => ({

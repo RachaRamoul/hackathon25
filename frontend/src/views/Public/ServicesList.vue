@@ -20,6 +20,7 @@
             <v-card-title class="text-lg font-semibold text-secondary">
               <div class="flex justify-between items-center w-full">
                 <span>{{ service.name }}</span>
+                <span class="text-sm text-gray-600">{{ service.price }} €</span>
               </div>
             </v-card-title>
 
@@ -47,7 +48,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import apiClient from '@/config/axios' // ✅ import de ton axios custom
+import apiClient from '@/config/axios' 
 
 const router = useRouter()
 const services = ref<any[]>([])
@@ -67,10 +68,10 @@ const formatDate = (dateString: string) => {
 
 onMounted(async () => {
   try {
-    const { data } = await apiClient.get('/services') // ✅ appel avec apiClient
+    const { data } = await apiClient.get('/services') 
     services.value = data
   } catch (error) {
-    console.error('❌ Erreur lors du chargement des services publics :', error)
+    console.error('Erreur lors du chargement des services publics :', error)
   }
 })
 </script>

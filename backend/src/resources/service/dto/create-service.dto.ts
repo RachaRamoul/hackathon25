@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray, IsBoolean, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsBoolean, ValidateNested,IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class VariableDto {
@@ -26,6 +26,9 @@ export class CreateServiceDto {
   @IsString({ message: 'Le type est requis.' })
   @IsNotEmpty({ message: 'Le type ne peut pas être vide.' })
   type: string;
+
+  @IsNumber({}, { message: 'Le prix doit être un nombre.' })
+  price: number;
 
   @IsString({ message: 'L\'ID du prestataire est requis.' })
   @IsNotEmpty({ message: 'L\'ID du prestataire ne peut pas être vide.' })

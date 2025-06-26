@@ -15,6 +15,9 @@ export class ServiceEntity {
   type: string
 
   @Expose()
+  price: number;
+
+  @Expose()
   createdAt: Date
 
   @Expose()

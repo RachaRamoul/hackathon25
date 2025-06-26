@@ -37,6 +37,17 @@
               required
             />
 
+            <v-text-field
+                  v-model="store.formPrice"
+                  label="Prix (€)"
+                  outlined
+                  dense
+                  class="mb-6"
+                  type="number"
+                  :rules="[v => v >= 0 || 'Le prix doit être positif']"
+                  required
+            />
+            
             <div v-for="(field, index) in store.fields" :key="index" class="mb-4">
               <v-row dense align="center">
                 <v-col cols="5">
