@@ -1,9 +1,8 @@
 import type { RouteRecordRaw } from 'vue-router'
 import Login from '../views/Login.vue'
-import ServicesList from '../views/ServicesList.vue'
+import ServicesList from '../views/Public/ServicesList.vue'
 import NotFound from '../views/NotFound.vue'
-import FormList from '@/views/Providers/FormList.vue'
-import FormDetail from '@/views/Providers/FormDetail.vue'
+import FormDetail from '@/views/Public/ServiceDetail.vue'
 
 const publicRoute: Array<RouteRecordRaw> = [
   {
@@ -22,13 +21,9 @@ const publicRoute: Array<RouteRecordRaw> = [
         meta: { requiresAuth: false }
       },
       {
-        path: 'form',
-        component: FormList,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: '/forms/:id',
+        path: '/services/:id',
         component: FormDetail,
+        meta: { requiresAuth: false }
       },
       {
         path: '/:pathMatch(.*)*',
@@ -39,6 +34,5 @@ const publicRoute: Array<RouteRecordRaw> = [
     ],
   }
 ];
-
 
 export default publicRoute

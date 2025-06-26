@@ -1,10 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-10 px-6">
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">Mes services</h1>
-      <v-btn color="primary" class="text-white text-sm font-medium" @click="goToCreateService">
-        Nouveau service
-      </v-btn>
+      <h1 class="text-2xl font-bold text-gray-800">Liste des services</h1>
     </div>
 
     <v-container fluid>
@@ -16,21 +13,13 @@
           md="6"
           lg="4"
         >
-          <v-card class="rounded-xl shadow-md hover:shadow-lg transition-all h-full">
+          <v-card
+            class="rounded-xl shadow-md hover:shadow-lg transition-all h-full cursor-pointer"
+            @click="goToService(service.id)"
+          >
             <v-card-title class="text-lg font-semibold text-secondary">
               <div class="flex justify-between items-center w-full">
                 <span>{{ service.name }}</span>
-                <v-tooltip text="Modifier le service">
-                  <template #activator="{ props }">
-                    <v-icon 
-                      v-bind="props"         
-                      icon="mdi-pencil"
-                      color="primary"
-                      size="24"
-                      class="cursor-pointer" 
-                      @click="editService(service.id)" />
-                  </template>
-                </v-tooltip>
               </div>
             </v-card-title>
 
@@ -58,30 +47,30 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import apiClient from '@/config/axios' 
+import apiClient from '@/config/axios' // ✅ import de ton axios custom
 
 const router = useRouter()
-const services = ref([])
+const services = ref<any[]>([])
 
-const editService = (id: number) => {
-  router.push(`/service-provider/services/${id}/edit`)
-}
-
-const goToCreateService = () => {
-  router.push('/service-provider/services/create')
+const goToService = (id: string) => {
+  router.push(`/services/${id}`)
 }
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString)
-  return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  })
 }
 
 onMounted(async () => {
   try {
-    const { data } = await apiClient.get('/serviceProviders/me/services') 
+    const { data } = await apiClient.get('/services') // ✅ appel avec apiClient
     services.value = data
   } catch (error) {
-    console.error('Erreur lors du chargement des services du provider :', error)
+    console.error('❌ Erreur lors du chargement des services publics :', error)
   }
 })
 </script>

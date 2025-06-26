@@ -15,7 +15,7 @@ const servicesProviderRoute: Array<RouteRecordRaw> = [
       {
         path: 'form-builder',
         name: 'FormBuilder',
-        component: () => import('@/views/Providers/FormBuilder.vue'),
+        component: () => import('@/views/serviceProvider/ProviderServiceBuilder.vue'),
         meta: { requiresAuth: false }
       },
     ],

@@ -4,7 +4,7 @@
       <v-row justify="center">
         <v-col cols="12" md="8">
           <v-card class="rounded-xl shadow-md px-6 py-8">
-            <h1 class="text-2xl font-bold mb-6 text-purple-800 text-center">🎨 Créer un service</h1>
+            <h1 class="text-2xl font-bold mb-6 text-purple-800 text-center"> Créer un service </h1>
 
             <v-text-field
               v-model="store.formTitle"
@@ -83,7 +83,7 @@
                 ➕ Ajouter un champ
               </v-btn>
 
-              <v-btn color="success" variant="flat" @click="store.saveForm">
+              <v-btn color="success" variant="flat" @click="store.saveService">
                 💾 Enregistrer
               </v-btn>
             </v-row>
@@ -95,8 +95,29 @@
 </template>
 
 <script setup lang="ts">
-import { useFormStore } from '@/stores/form'
-import { VBtn, VCard, VCheckbox, VCol, VContainer, VIcon, VRow, VSelect, VTextField, VTextarea } from 'vuetify/components'
+import { watchEffect } from 'vue'
+import { useAuthStore } from '../../stores/auth'
+import { useServiceStore } from '../../stores/service'
+import {
+  VBtn,
+  VCard,
+  VCheckbox,
+  VCol,
+  VContainer,
+  VIcon,
+  VRow,
+  VSelect,
+  VTextField,
+  VTextarea,
+} from 'vuetify/components'
 
-const store = useFormStore()
+const authStore = useAuthStore()
+const store = useServiceStore()
+
+watchEffect(() => {
+  if (authStore.user?.id) {
+    store.serviceProviderId = authStore.user.id
+  }
+})
 </script>
+

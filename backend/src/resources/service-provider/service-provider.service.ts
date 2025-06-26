@@ -68,6 +68,24 @@ export class ServiceProviderService {
     return plainToInstance(ServiceProviderEntity, deletedserviceProvider);
   }
 
+  async findServicesByProvider(providerId: string) {
+    const provider = await this.getserviceProviderOrThrow(providerId);
+  
+    const services = await this.prisma.service.findMany({
+      where: { serviceProviderId: providerId },
+      include: {
+        serviceProvider: true,
+        variables: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  
+    return services;
+  }
+  
+
   async changePassword(
     serviceProviderId: string,
     changePasswordDto: ChangePasswordDto,

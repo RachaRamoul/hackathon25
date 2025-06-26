@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import apiClient from '@/config/axios'
 
-export const useFormStore = defineStore('form', {
+export const useServiceStore = defineStore('service', {
   state: () => ({
     formTitle: '',
     formDescription: '', 
-    formType: '',         
+    formType: '', 
+    serviceProviderId: '',        
     fields: [{ label: '', type: 'TEXT', required: false }],
     forms: [],
     currentForm: null,
@@ -20,8 +21,8 @@ export const useFormStore = defineStore('form', {
       this.fields.splice(index, 1)
     },
 
-    async saveForm() {
-      if (!this.formTitle || !this.formDescription || !this.formType) {
+    async saveService() {
+      if (!this.formTitle || !this.formDescription || !this.formType || !this.serviceProviderId) {
         alert('Veuillez remplir tous les champs obligatoires.')
         return
       }
@@ -38,35 +39,37 @@ export const useFormStore = defineStore('form', {
       }
     
       try {
-        await axios.post('http://localhost:8000/forms', {
-          title: this.formTitle,
+        await apiClient.post('/services', {
+          name: this.formTitle,
           description: this.formDescription,
           type: this.formType,
+          serviceProviderId: this.serviceProviderId,
           variables: this.fields,
         })
-        alert('✅ Formulaire enregistré !')
+        alert(' Service enregistré !')
       } catch (error) {
         console.error(error)
         alert('Erreur lors de la sauvegarde')
       }
     },    
 
-    async fetchForms() {
+    async fetchServices() {
       try {
-        const { data } = await axios.get('http://localhost:8000/forms')
+        const { data } = await apiClient.get('/services')
         this.forms = data
       } catch (error) {
-        console.error('Erreur fetchForms', error)
+        console.error('Erreur fetchServices', error)
       }
-    },
+    },    
 
-    async fetchForm(id: string) {
+    async fetchService(id: string) {
       try {
-        const { data } = await axios.get(`http://localhost:8000/forms/${id}`)
+        const { data } = await apiClient.get(`/services/${id}`) 
         this.currentForm = data
       } catch (error) {
-        console.error('Erreur fetchForm', error)
+        console.error('Erreur fetchService', error)
       }
-    },
+    }
+    
   },
 })

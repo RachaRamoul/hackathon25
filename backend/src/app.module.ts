@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from './database/prisma/prisma.module';
-import { FormModule } from './resources/form/form.module';
+import { ServiceModule } from './resources/service/service.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './resources/auth/auth.module';
 
@@ -10,7 +10,7 @@ import { AuthModule } from './resources/auth/auth.module';
       isGlobal: true,
     }),
     PrismaModule,
-    FormModule,
+    ServiceModule,
     AuthModule,
   ],
 })
