@@ -58,6 +58,15 @@
           />
 
           <v-select
+            v-model="store.formProvider"
+            :items="['openai', 'mistral', 'anthropic', 'groq']"
+            label="Fournisseur IA"
+            variant="outlined"
+            density="compact"
+            hide-details="auto"
+          />
+
+          <v-select
             v-model="store.formModel"
             :items="['gpt-3.5-turbo', 'gpt-4']"
             label="Modèle OpenAI"
@@ -88,6 +97,14 @@
             density="compact"
             hide-details="auto"
           />
+          <v-btn
+            size="small"
+            variant="tonal"
+            color="primary"
+            @click="extractFieldsFromPrompt"
+          >
+            Générer les champs depuis le prompt
+          </v-btn>
           <div v-if="store.formType === 'ia' && store.fields.length" class="space-y-2">
             <label class="text-sm text-gray-600 font-medium">Variables disponibles :</label>
             <div v-if="availableVariables.length > 0"  class="flex flex-wrap gap-2">
@@ -161,7 +178,7 @@
             Ajouter un champ
           </v-btn>
           <v-btn variant="flat" size="small" color="secondary" @click="store.saveService">
-            Enregistrer
+            {{ store.formType === 'ia' ? 'Enregistrer le service IA' : 'Enregistrer le service Humain' }}
           </v-btn>
         </div>
       </div>
@@ -231,5 +248,31 @@ function insertVariable(label: string) {
     });
   });
 }
+
+function extractFieldsFromPrompt() {
+  const regex = /{([\w\d_]+)}/g;
+  const foundVariables = new Set<string>();
+  let match;
+
+  while ((match = regex.exec(store.formDefaultPrompt)) !== null) {
+    const variable = match[1];
+    const alreadyExists = store.fields.some(f => toVariableKey(f.label) === variable);
+    if (!alreadyExists) {
+      store.fields.push({
+        label: variable.replace(/_/g, ' '),
+        type: 'TEXT',
+        required: true,
+      });
+      foundVariables.add(variable);
+    }
+  }
+
+  if (foundVariables.size === 0) {
+    alert("Aucune nouvelle variable trouvée ou elles existent déjà.");
+  } else {
+    alert(`${foundVariables.size} variable(s) ajoutée(s) depuis le prompt.`);
+  }
+}
+
 </script>
 

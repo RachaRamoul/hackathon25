@@ -61,4 +61,8 @@ export class CreateServiceDto {
   @IsString()
   @IsNotEmpty()
   apiKey: string;
+
+  @IsString()
+  @IsNotEmpty()
+  provider: string;
 }

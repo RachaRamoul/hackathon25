@@ -14,6 +14,7 @@ model AiConfiguration {
   systemPrompt    String
   defaultPrompt   String
   encryptedApiKey String
+  provider         String   @default("openai")
 
   serviceId String  @unique
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)

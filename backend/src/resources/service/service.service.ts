@@ -19,12 +19,13 @@ export class ServiceService {
       model,
       systemPrompt,
       apiKey,
+      provider,
     } = data;
-    const provider = await this.prisma.serviceProvider.findUnique({
+    const serviceProvider = await this.prisma.serviceProvider.findUnique({
       where: { id: serviceProviderId },
     });
 
-    if (!provider) {
+    if (!serviceProvider) {
       throw new NotFoundException('Fournisseur de service introuvable.');
     }
 
@@ -54,6 +55,7 @@ export class ServiceService {
         model,
         systemPrompt,
         defaultPrompt,
+        provider,
         encryptedApiKey: encrypt(apiKey),
         serviceId: service.id,
       },

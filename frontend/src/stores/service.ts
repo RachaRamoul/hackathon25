@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import apiClient from '@/config/axios'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-
 export const useServiceStore = defineStore('service', {
   state: () => ({
     formTitle: '',
@@ -12,6 +10,7 @@ export const useServiceStore = defineStore('service', {
     formPrice: 0, 
     serviceProviderId: '', 
     formModel: 'gpt-4',
+    formProvider: 'openai',
     formSystemPrompt: '',
     formDefaultPrompt: '',
     formApiKey: '',       
@@ -30,6 +29,7 @@ export const useServiceStore = defineStore('service', {
     },
 
     async saveService() {
+      const router = useRouter()
       console.log({
         title: this.formTitle,
         description: this.formDescription,
@@ -70,6 +70,7 @@ export const useServiceStore = defineStore('service', {
           price: Number(this.formPrice),
           defaultPrompt: this.formDefaultPrompt,
           apiKey: this.formApiKey,
+          provider: this.formProvider,
           variables: this.fields,
         })
         alert(' Service enregistré !')

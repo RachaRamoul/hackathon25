@@ -58,18 +58,28 @@
         </div>
       </form>
       <div class="mt-6">
-      <button
-        @click="sendToIa"
-        class="bg-secondary px-4 py-2"
-      >
-        Envoyer à l'IA
-      </button>
-    </div>
+        <button
+          @click="sendToIa"
+          class="bg-secondary px-4 py-2 rounded text-white"
+          :disabled="isLoading"
+        >
+          <span v-if="!isLoading">Envoyer à l'IA</span>
+          <span v-else>Traitement en cours...</span>
+        </button>
+      </div>
+      <div v-if="isLoading" class="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600">
+        <svg class="animate-spin h-5 w-5 text-secondary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+        </svg>
+        L'IA est en train de générer la réponse...
+      </div>
 
-    <div v-if="iaResponse" class="mt-6 p-4 border border-green-400 bg-green-50 rounded">
-      <h2 class="text-lg font-semibold text-green-700 mb-2">Réponse de l'IA :</h2>
-      <p class="text-gray-800 whitespace-pre-line">{{ iaResponse }}</p>
-    </div>
+      <div v-if="!isLoading && iaResponse" class="mt-6 p-4 border border-green-400 bg-green-50 rounded">
+        <h2 class="text-lg font-semibold text-green-700 mb-2">Réponse de l'IA :</h2>
+        <p class="text-gray-800 whitespace-pre-line">{{ iaResponse }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +92,7 @@ import apiClient from '@/config/axios'
 const route = useRoute()
 const service = ref<any>(null)
 const responses = ref<{ [key: string]: any }>({})
+const isLoading = ref(false)
 
 onMounted(async () => {
   try {
@@ -119,6 +130,8 @@ const sendToIa = async () => {
     );
   });
 
+  isLoading.value = true;
+
   if (missing) {
     alert(`Le champ "${missing.label}" est requis.`);
     return;
@@ -134,6 +147,8 @@ const sendToIa = async () => {
   } catch (err) {
     console.error('Erreur IA :', err);
     iaResponse.value = "Une erreur s'est produite lors de l'appel à l'IA.";
+  } finally {
+    isLoading.value = false;
   }
 };
 
