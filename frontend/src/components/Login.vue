@@ -33,7 +33,7 @@
                     </div>
 
                     <v-card-actions>
-                        <v-btn :loading="loading" color="primary" block variant="flat" @click="submit">Se connecter</v-btn>
+                        <v-btn :loading="loading" color="secondary" block variant="flat" @click="submit">Se connecter</v-btn>
                     </v-card-actions>
             
                   </form>

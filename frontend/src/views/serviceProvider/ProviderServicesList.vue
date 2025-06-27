@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-10 px-6">
-    <!-- Header -->
-    <div class="mb-8">
+    <div class="mb-8 flex items-center justify-between">
+      <h1 class="text-3xl font-semibold text-gray-800 tracking-tight">
+        Mes services
+      </h1>
+
       <v-btn
         color="secondary"
         class="mb-6 text-white text-sm font-medium shadow-sm"
@@ -10,11 +13,6 @@
       >
         Nouveau service
       </v-btn>
-
-      <!-- Titre en dessous -->
-      <h1 class="text-3xl font-semibold text-gray-800 tracking-tight">
-        Mes services
-      </h1>
     </div>
 
 

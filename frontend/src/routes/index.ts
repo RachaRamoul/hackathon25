@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
     }
   
     if (to.name === 'Login' && authStore.isAuthenticated) {
-      return next({ name: 'ServicesList' });
+      return next({ name: 'ProviderServicesList' });
     }
 
     next();

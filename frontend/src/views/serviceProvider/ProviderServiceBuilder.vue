@@ -50,7 +50,7 @@
           
           <v-text-field
             v-model="store.formApiKey"
-            label="Clé API OpenAI"
+            label="Clé API"
             type="password"
             variant="outlined"
             density="compact"
@@ -177,7 +177,7 @@
           <v-btn variant="plain" size="small" color="secondary" @click="store.addField">
             Ajouter un champ
           </v-btn>
-          <v-btn variant="flat" size="small" color="secondary" @click="store.saveService">
+          <v-btn variant="flat" size="small" color="secondary" @click="handleSubmit()">
             {{ store.formType === 'ia' ? 'Enregistrer le service IA' : 'Enregistrer le service Humain' }}
           </v-btn>
         </div>
@@ -204,10 +204,12 @@ import {
   VTextField,
   VTextarea,
 } from 'vuetify/components'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const store = useServiceStore()
 const defaultPromptRef = ref<any>(null);
+const router = useRouter()
 
 watchEffect(() => {
   if (authStore.user?.id) {
@@ -271,6 +273,13 @@ function extractFieldsFromPrompt() {
     alert("Aucune nouvelle variable trouvée ou elles existent déjà.");
   } else {
     alert(`${foundVariables.size} variable(s) ajoutée(s) depuis le prompt.`);
+  }
+}
+
+const handleSubmit = async () => {
+  const success = await store.saveService()
+  if (success) {
+    router.push('/service-provider/services')
   }
 }
 

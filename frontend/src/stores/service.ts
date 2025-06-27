@@ -74,10 +74,11 @@ export const useServiceStore = defineStore('service', {
           variables: this.fields,
         })
         alert(' Service enregistré !')
-        router.push('/service-provider/services')
+        return true
       } catch (error) {
         console.error(error)
         alert('Erreur lors de la sauvegarde')
+        return false
       }
     },    
 
